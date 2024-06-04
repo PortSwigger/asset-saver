@@ -1,0 +1,13 @@
+Uuid: 02418b1040fb44d0b99c52f0a04d87f7
+ExtensionType: 1
+Name: Asset Saver
+RepoName: asset-saver
+ScreenVersion: 1.0
+SerialVersion: 2
+MinPlatformVersion: 15
+ProOnly: False
+Author: Gabe Rust
+ShortDescription: Save previosuly loaded assets.
+EntryPoint: target/burp_asset_saver-1.0-SNAPSHOT.jar
+BuildCommand: mvn package -DskipTests=true -Dmaven.javadoc.skip=true -B
+SupportedProducts: Pro, Community
