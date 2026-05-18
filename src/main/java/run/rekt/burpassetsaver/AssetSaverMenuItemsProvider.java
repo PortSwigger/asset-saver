@@ -6,6 +6,7 @@ import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.http.message.responses.HttpResponse;
 import burp.api.montoya.ui.contextmenu.ContextMenuEvent;
 import burp.api.montoya.ui.contextmenu.ContextMenuItemsProvider;
+import run.rekt.burpassetsaver.util.ContentDispositionParser;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -24,6 +25,8 @@ import java.util.List;
 public class AssetSaverMenuItemsProvider implements ContextMenuItemsProvider {
 
     private final MontoyaApi api;
+
+    private static final String LAST_SAVE_DIR_KEY = "asset_saver_last_save_dir";
 
     /**
      * Constructs the MenuItemsProvider implementation with provided Montoya API instance.
@@ -50,17 +53,32 @@ public class AssetSaverMenuItemsProvider implements ContextMenuItemsProvider {
 
         JMenuItem saveAssetItem = new JMenuItem("Save Asset");
         saveAssetItem.addActionListener((e) -> {
-            String filename = getFilename(requestResponse.request());
+            String filename = getFilename(requestResponse.request(), requestResponse.response());
 
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setMultiSelectionEnabled(false);
             fileChooser.setAcceptAllFileFilterUsed(true);
+
+            String lastDir = api.persistence().extensionData().getString(LAST_SAVE_DIR_KEY);
+            if (lastDir != null) {
+                File dir = new File(lastDir);
+                if (dir.isDirectory()) {
+                    fileChooser.setCurrentDirectory(dir);
+                }
+            }
+
             if (filename != null) {
-                fileChooser.setSelectedFile(new File(filename));
+                fileChooser.setSelectedFile(new File(fileChooser.getCurrentDirectory(), filename));
             }
             if (fileChooser.showSaveDialog(api.userInterface().swingUtils().suiteFrame()) == JFileChooser.APPROVE_OPTION) {
+                File selected = fileChooser.getSelectedFile();
                 try {
-                    writeFile(requestResponse.response(), fileChooser.getSelectedFile());
+                    writeFile(requestResponse.response(), selected);
+
+                    File parent = selected.getParentFile();
+                    if (parent != null) {
+                        api.persistence().extensionData().setString(LAST_SAVE_DIR_KEY, parent.getAbsolutePath());
+                    }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(
                             api.userInterface().swingUtils().suiteFrame(),
@@ -95,7 +113,21 @@ public class AssetSaverMenuItemsProvider implements ContextMenuItemsProvider {
      * @param request Request object containing URL information.
      * @return The extracted filename, or null if filename is blank
      */
-    private static String getFilename(HttpRequest request) {
+    private static String getFilename(HttpRequest request, HttpResponse response) {
+        if (response != null) {
+            String filename = ContentDispositionParser.extractFilename(
+                    response.headerValue("Content-Disposition")
+            );
+            if (filename != null) {
+                int lastSlash = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
+                if (lastSlash >= 0) {
+                    filename = filename.substring(lastSlash + 1);
+                }
+                if (!filename.isBlank()) {
+                    return filename;
+                }
+            }
+        }
         try {
             String filename = Paths.get(new URI(request.url()).getPath()).getFileName().toString().trim();
             if (filename.isBlank()) {

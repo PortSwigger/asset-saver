@@ -14,27 +14,26 @@ For those who prefer direct downloads, the latest built versions of the
 extension can be found on the
 [Releases page](https://github.com/gaberust/burp_asset_saver/releases).
 
-### Building with Maven
+### Building with Gradle
 
 If you'd like to build the project from source using Maven:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/gaberust/burp_asset_saver.git
+git clone https://github.com/gaberust/burp-asset-saver.git
 ```
 
 2. Navigate to the project directory:
 ```bash
-cd burp_asset_saver
+cd burp-asset-saver
 ```
 
 3. Build the project using Maven:
 ```bash
-mvn package
+./gradlew jar
 ```
 
-After these steps, you'll find the built `.jar` file in the `target` directory.
-Use the one that does NOT start with `original-`: it does not include the required dependencies.
+After these steps, you'll find the built `.jar` file in the `build/libs` directory.
 
 ### Building with IntelliJ
 
@@ -42,12 +41,11 @@ If you're using IntelliJ IDEA:
 
 1. Open IntelliJ and go to `File` -> `Open`.
 2. Navigate to the cloned directory and open the project.
-3. In the right-hand pane, under the `Maven` tab, expand the `Lifecycle` section.
-4. Double-click on `package` to build the project.
+3. In the right-hand pane, under the `Gradle` tab, expand the `Tasks > build` section.
+4. Double-click on `build` or `jar` to build the project.
 
-After these steps, you'll find the built `.jar` file in the `target`
-directory. Use the one that does NOT start with `original-` (it does not
-include the required dependencies).
+After these steps, you'll find the built `.jar` file in the `build/libs`
+directory.
 
 ## Feedback and Contributions
 
