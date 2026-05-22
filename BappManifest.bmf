@@ -3,7 +3,7 @@ ExtensionType: 1
 Name: Asset Saver
 RepoName: asset-saver
 ScreenVersion: 1.1.0
-SerialVersion: 3
+SerialVersion: 4
 MinPlatformVersion: 30
 ProOnly: False
 Author: Gabe Rust
