@@ -1,5 +1,20 @@
-<p>Asset Saver is a Burp Suite extension that enables saving previously loaded assets from within Burp Suite.</p>
+<p>
+    Asset Saver adds a context menu item for saving response bodies to disk. It writes the raw bytes of the response,
+    avoiding the encoding issues that can occur when copying or saving binary data through other means.
+</p>
 
-<p>It adds a context menu item to HTTP History items and the HTTP Request/Response Inspector within multiple tools.</p>
+<h2>Features</h2>
+<ul>
+    <li>Adds a Save Asset context menu item to HTTP History entries and to the request/response viewer across tools such
+        as Proxy, Repeater, and Logger.</li>
+    <li>Writes the unmodified raw bytes of the response body, preserving binary assets like images, archives, fonts, and
+        media files.</li>
+    <li>Pre-fills the suggested filename from the response.</li>
+</ul>
 
-<p>Asset Saver extracts the raw bytes from the response body into the save file, mitigating encoding issues that arise when copying or saving binary data from Burp Suite.</p>
+<h2>Usage</h2>
+<ol>
+    <li>Right-click an item that has a response, either in HTTP History or in a request/response viewer.</li>
+    <li>Select Save Asset from the context menu.</li>
+    <li>Confirm or edit the suggested filename in the file chooser and choose a destination to write the asset.</li>
+</ol>
